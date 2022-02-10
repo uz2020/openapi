@@ -59,14 +59,14 @@ func check(e error) {
 
 func parseMap(aMap map[string]interface{}, from, to *openapi3.T) {
 	for key, val := range aMap {
-		switch concreteVal := val.(type) {
+		switch val := val.(type) {
 		case map[string]interface{}:
-			parseMap(val.(map[string]interface{}), from, to)
+			parseMap(val, from, to)
 		case []interface{}:
-			parseArray(val.([]interface{}), from, to)
+			parseArray(val, from, to)
 		default:
 			if key == "$ref" {
-				name := getRefName(concreteVal.(string))
+				name := getRefName(val.(string))
 				yankSchema(name, from, to)
 			}
 		}
@@ -75,11 +75,11 @@ func parseMap(aMap map[string]interface{}, from, to *openapi3.T) {
 
 func parseArray(anArray []interface{}, from, to *openapi3.T) {
 	for _, val := range anArray {
-		switch val.(type) {
+		switch val := val.(type) {
 		case map[string]interface{}:
-			parseMap(val.(map[string]interface{}), from, to)
+			parseMap(val, from, to)
 		case []interface{}:
-			parseArray(val.([]interface{}), from, to)
+			parseArray(val, from, to)
 		}
 	}
 }
